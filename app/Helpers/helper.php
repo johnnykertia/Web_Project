@@ -37,3 +37,17 @@ function truncate(string $text, int $limit = 25,): String
 {
     return \Str::limit($text, $limit, '...');
 }
+
+//Views ribuan
+function countViewsFormat(int $number): String
+{
+    if($number < 1000){
+        return $number;
+    }
+    else if($number < 1000000){
+        return round($number / 1000, 1) . 'K';
+    }
+    else{
+        return round($number /1000000, 1) . 'K';
+    }
+}
