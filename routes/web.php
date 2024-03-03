@@ -34,3 +34,6 @@ Route::get('language', LanguageController::class)->name('language');
 
 //Details Page
 Route::get('news-details/{slug}', [HomeController::class, 'ShowNews'])->name('news-details');
+
+//Comment
+Route::post('news-comment', [HomeController::class, 'handleComment'])->name('news-comment');

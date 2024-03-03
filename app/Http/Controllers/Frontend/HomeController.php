@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
+use App\Models\Comment;
 use App\Models\News;
+use App\Models\Tag;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -22,9 +25,11 @@ class HomeController extends Controller
 
         $recentNews = News::with(['category', 'auther'])->where('slug', '!=', $news->slug)->ActiveEntries()->WithLocalitazer()->orderBy('id', 'DESC')->take(4)->get();
 
+        $mostTags = $this->mostTags();
+
         $this->countViews($news);
 
-        return view('frontend.news-details', compact('news', 'recentNews'));
+        return view('frontend.news-details', compact('news', 'recentNews', 'mostTags'));
     }
 
     //Views
@@ -43,5 +48,30 @@ class HomeController extends Controller
             session(['viewed_posts' => [$news->id]]);
             $news->increment('views');
         }
+    }
+
+    public function mostTags()
+    {
+        return Tag::select('name', \DB::raw('COUNT(*) as count'))
+            ->where('language', getLanguage())
+            ->groupBy('name')
+            ->orderByDesc('count')
+            ->take(15)
+            ->get();
+    }
+
+    public function handleComment(Request $request){
+        $request->validate([
+            'comment' => ['required', 'string', 'max:1000']
+        ]);
+
+        $comment = New Comment();
+        $comment -> news_id = $request->news_id;
+        $comment -> user_id = Auth::user()->id;
+        $comment -> parent_id = $request->parent_id;
+        $comment -> comment = $request->comment;
+        $comment -> save();
+
+        return redirect()->back();
     }
 }
