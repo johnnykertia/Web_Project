@@ -21,7 +21,7 @@ class HomeController extends Controller
 
     public function ShowNews(string $slug)
     {
-        $news = News::with(['auther', 'tags'])->where('slug', $slug)->ActiveEntries()->WithLocalitazer()->first();
+        $news = News::with(['auther', 'tags', 'comments'])->where('slug', $slug)->ActiveEntries()->WithLocalitazer()->first();
 
         $recentNews = News::with(['category', 'auther'])->where('slug', '!=', $news->slug)->ActiveEntries()->WithLocalitazer()->orderBy('id', 'DESC')->take(4)->get();
 
@@ -60,17 +60,35 @@ class HomeController extends Controller
             ->get();
     }
 
-    public function handleComment(Request $request){
+    public function handleComment(Request $request)
+    {
         $request->validate([
             'comment' => ['required', 'string', 'max:1000']
         ]);
 
-        $comment = New Comment();
-        $comment -> news_id = $request->news_id;
-        $comment -> user_id = Auth::user()->id;
-        $comment -> parent_id = $request->parent_id;
-        $comment -> comment = $request->comment;
-        $comment -> save();
+        $comment = new Comment();
+        $comment->news_id = $request->news_id;
+        $comment->user_id = Auth::user()->id;
+        $comment->parent_id = $request->parent_id;
+        $comment->comment = $request->comment;
+        $comment->save();
+
+        return redirect()->back();
+    }
+
+    public function handleReplay(Request $request)
+    {
+
+        $request->validate([
+            'replay' => ['required', 'string', 'max:1000']
+        ]);
+
+        $comment = new Comment();
+        $comment->news_id = $request->news_id;
+        $comment->user_id = Auth::user()->id;
+        $comment->parent_id = $request->parent_id;
+        $comment->comment = $request->replay;
+        $comment->save();
 
         return redirect()->back();
     }
