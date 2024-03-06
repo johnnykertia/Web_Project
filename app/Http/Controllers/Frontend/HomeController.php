@@ -25,11 +25,21 @@ class HomeController extends Controller
 
         $recentNews = News::with(['category', 'auther'])->where('slug', '!=', $news->slug)->ActiveEntries()->WithLocalitazer()->orderBy('id', 'DESC')->take(4)->get();
 
+        $nextPost = News::where('id', '>', $news->id)
+            ->ActiveEntries()
+            ->WithLocalitazer()
+            ->orderBy('id', 'asc')->first();
+
+        $previousPost = News::where('id', '<', $news->id)
+            ->ActiveEntries()
+            ->WithLocalitazer()
+            ->orderBy('id', 'desc')->first();
+
         $mostTags = $this->mostTags();
 
         $this->countViews($news);
 
-        return view('frontend.news-details', compact('news', 'recentNews', 'mostTags'));
+        return view('frontend.news-details', compact('news', 'recentNews', 'mostTags', 'nextPost', 'previousPost'));
     }
 
     //Views

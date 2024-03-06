@@ -249,7 +249,8 @@
                                                                             data-toggle="modal"
                                                                             data-target="#exampleModal-{{ $comment->id }}">Reply</a>
                                                                     @endif
-                                                                    <span class="delete-msg" style="margin-left: auto" data-id="{{ $reply->id }}">
+                                                                    <span class="delete-msg" style="margin-left: auto"
+                                                                        data-id="{{ $reply->id }}">
                                                                         <i class="fa fa-trash"></i>
                                                                     </span>
                                                                 </div>
@@ -333,18 +334,22 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="single_navigation-prev">
-                                <a href="#">
-                                    <span>previous post</span>
-                                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Rem, similique.
-                                </a>
+                                @if ($previousPost)
+                                    <a href="{{ route('news-details', $previousPost->slug) }}">
+                                        <span>{{ __('Previous Post') }}</span>
+                                        {!! truncate($previousPost->title) !!}
+                                    </a>
+                                @endif
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="single_navigation-next text-left text-md-right">
-                                <a href="#">
-                                    <span>next post</span>
-                                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Perferendis, nesciunt.
-                                </a>
+                                @if ($nextPost)
+                                    <a href="{{ route('news-details', $nextPost->slug) }}">
+                                        <span>{{ __('Next Post') }}</span>
+                                        {!! truncate($nextPost->title) !!}
+                                    </a>
+                                @endif
                             </div>
                         </div>
                     </div>
