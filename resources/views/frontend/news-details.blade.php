@@ -244,10 +244,12 @@
                                                                 </div>
 
                                                                 <div class="reply">
-                                                                    <a href="#" class="comment-reply-link"
-                                                                        data-toggle="modal"
-                                                                        data-target="#exampleModal-{{ $comment->id }}">Reply</a>
-                                                                    <span class="delete-msg" data-id="{{ $reply->id }}">
+                                                                    @if ($loop->last)
+                                                                        <a href="#" class="comment-reply-link"
+                                                                            data-toggle="modal"
+                                                                            data-target="#exampleModal-{{ $comment->id }}">Reply</a>
+                                                                    @endif
+                                                                    <span class="delete-msg" style="margin-left: auto" data-id="{{ $reply->id }}">
                                                                         <i class="fa fa-trash"></i>
                                                                     </span>
                                                                 </div>
